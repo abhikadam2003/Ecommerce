@@ -2,9 +2,9 @@ const mongoose = require ('mongoose');
 require('dotenv').config();
 
 async function connectDB(mongouri){
-    const uri = mongouri || process.env.MONGO_URI
+    const uri = mongouri || process.env.MONGODB_URI
     if(!uri){
-        throw new Error("MONGO_URI is not defined");
+        throw new Error("MONGODB_URI is not defined");
     }
 
     await mongoose.connect(uri);

@@ -30,9 +30,12 @@ const Login: React.FC = () => {
 
   const onSubmit = async (data: LoginCredentials) => {
     try {
+      console.log('Attempting login with:', data);
       await login(data);
+      console.log('Login successful, navigating to:', from);
       navigate(from, { replace: true });
     } catch (error) {
+      console.error('Login failed:', error);
       // Error is handled by the auth context
     }
   };

@@ -53,12 +53,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await authAPI.login(credentials);
       if (response.data.success) {
-        const { token, data } = response.data;
+        const { token, ...userData } = response.data.data;
         localStorage.setItem('token', token);
-        setUser(data as User);
+        setUser(userData as User);
         toast.success('Login successful!');
       }
     } catch (error: any) {
+      console.error('Login error:', error);
       toast.error(error.response?.data?.message || 'Login failed');
       throw error;
     }
@@ -68,12 +69,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await authAPI.register(credentials);
       if (response.data.success) {
-        const { token, data } = response.data;
+        const { token, ...userData } = response.data.data;
         localStorage.setItem('token', token);
-        setUser(data as User);
+        setUser(userData as User);
         toast.success('Registration successful!');
       }
     } catch (error: any) {
+      console.error('Registration error:', error);
       toast.error(error.response?.data?.message || 'Registration failed');
       throw error;
     }

@@ -32,8 +32,9 @@ exports.register = async(req , res) => {
             id:user._id,
             name:user.name,
             email:user.email,
-            role:user.role
-        }, token});
+            role:user.role,
+            token: token
+        }});
     }catch(err){
         res.status(500).json({success:false, message:err.message});
     }
@@ -48,12 +49,13 @@ exports.login = async(req , res) =>{
         if(!match) return res.status(400).json({success: false, message:'Invalid password'});
         const token = user.signToken();
         setTokenCookies(res, token);
-        res.status(201).json({success:true,data:{
+        res.status(200).json({success:true,data:{
             id:user._id,
             name:user.name,
             email:user.email,
-            role:user.role
-        }, token});
+            role:user.role,
+            token: token
+        }});
     }
     catch(err){
         res.status(500).json({success:false, message:err.message});

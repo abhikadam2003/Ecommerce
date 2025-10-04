@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {createProduct,updateProduct,deleteProduct,getProduct,getProducts} = require('../controller/product.controller');
 const {protect, authorize} = require('../middleware/auth');
-const ROLES = require("../utils/roles");
+const {ROLES} = require("../utils/roles");
 
 
 router.get('/',getProducts);

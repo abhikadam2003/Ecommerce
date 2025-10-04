@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {createCategory, updateCategory,deleteCategory, getCategory, getCategories} = require('../controller/category.controller');
 const {protect, authorize} = require('../middleware/auth');
-const ROLES = require("../utils/roles");
+const {ROLES} = require("../utils/roles");
 
 
 router.get('/:id',getCategory);

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {placeOrder, getMyOrders, getAllOrders,updateOrderStatus} = require('../controller/order.controller');
 const {protect, authorize} = require('../middleware/auth');
-const ROLES = require("../utils/roles");
+const {ROLES} = require("../utils/roles");
 
 
 

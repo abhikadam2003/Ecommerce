@@ -8,7 +8,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 
 const AdminPanel: React.FC = () => {
-  const { isAdmin } = useAuth();
+  const {isAdmin } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'orders'>('products');
 
