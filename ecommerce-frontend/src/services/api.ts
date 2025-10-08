@@ -48,11 +48,15 @@ export const productAPI = {
   getProduct: (id: string) =>
     api.get<ApiResponse<Product>>(`/products/${id}`),
   
-  createProduct: (product: Partial<Product>) =>
-    api.post<ApiResponse<Product>>('/products', product),
+  createProduct: (product: Partial<Product> | FormData) =>
+    api.post<ApiResponse<Product>>('/products', product, {
+      headers: product instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {}
+    }),
   
-  updateProduct: (id: string, product: Partial<Product>) =>
-    api.put<ApiResponse<Product>>(`/products/${id}`, product),
+  updateProduct: (id: string, product: Partial<Product> | FormData) =>
+    api.put<ApiResponse<Product>>(`/products/${id}`, product, {
+      headers: product instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {}
+    }),
   
   deleteProduct: (id: string) =>
     api.delete<ApiResponse<{ message: string }>>(`/products/${id}`),

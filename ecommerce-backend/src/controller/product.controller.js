@@ -1,22 +1,45 @@
 const Product = require('../models/Product');
 const { buildSearchFilter, buildCategoryFilter, buildSort, buildPagination } = require('../utils/apiFeatures');
+const path = require('path');
 
 exports.createProduct = async(req, res ) =>{
     try{
-        const product = await Product.create(req.body);
-        res.status(200).json({success:true, data:product});
+        // Handle image uploads
+        let images = [];
+        if (req.files && req.files.length > 0) {
+            images = req.files.map(file => `/uploads/${file.filename}`);
+        }
+        
+        const productData = {
+            ...req.body,
+            images: images
+        };
+        
+        const product = await Product.create(productData);
+        res.status(201).json({success:true, data:product});
     }catch(err){
-        res.status(400).json({success:true, message:err.message});
+        res.status(400).json({success:false, message:err.message});
     }
 }
 
 exports.updateProduct = async(req , res) =>{
     try{
-        const product = await Product.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+        // Handle image uploads
+        let images = [];
+        if (req.files && req.files.length > 0) {
+            images = req.files.map(file => `/uploads/${file.filename}`);
+        }
+        
+        const updateData = {
+            ...req.body,
+            ...(images.length > 0 && { images: images })
+        };
+        
+        const product = await Product.findByIdAndUpdate(req.params.id, updateData, {new: true, runValidators: true});
         if(!product) return res.status(404).json({success:false, message: 'Product not found'});
         res.json({success:true, data:product});
     }catch(err){
-        res.status(400).json({success:true, message:err.message});
+        res.status(400).json({success:false, message:err.message});
     }
 }
 

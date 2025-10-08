@@ -5,12 +5,15 @@ import { useAuth } from '../contexts/AuthContext';
 import { productAPI, categoryAPI, orderAPI } from '../services/api';
 import { Product, Category, Order } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ProductForm from '../components/ProductForm';
 import toast from 'react-hot-toast';
 
 const AdminPanel: React.FC = () => {
   const {isAdmin } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'orders'>('products');
+  const [showProductForm, setShowProductForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | undefined>();
 
   const { data: productsData, isLoading: productsLoading } = useQuery({
     queryKey: ['products'],
@@ -92,6 +95,25 @@ const AdminPanel: React.FC = () => {
     updateOrderStatusMutation.mutate({ id, status });
   };
 
+  const handleAddProduct = () => {
+    setEditingProduct(undefined);
+    setShowProductForm(true);
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setShowProductForm(true);
+  };
+
+  const handleCloseProductForm = () => {
+    setShowProductForm(false);
+    setEditingProduct(undefined);
+  };
+
+  const handleProductFormSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Panel</h1>
@@ -125,7 +147,10 @@ const AdminPanel: React.FC = () => {
         <div>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold text-gray-900">Products</h2>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center">
+            <button 
+              onClick={handleAddProduct}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"
+            >
               <Plus className="h-5 w-5 mr-2" />
               Add Product
             </button>
@@ -190,7 +215,10 @@ const AdminPanel: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900">
+                          <button 
+                            onClick={() => handleEditProduct(product)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
@@ -332,6 +360,16 @@ const AdminPanel: React.FC = () => {
             </div>
           )}
         </div>
+      )}
+
+      {/* Product Form Modal */}
+      {showProductForm && (
+        <ProductForm
+          product={editingProduct}
+          categories={categories}
+          onClose={handleCloseProductForm}
+          onSuccess={handleProductFormSuccess}
+        />
       )}
     </div>
   );

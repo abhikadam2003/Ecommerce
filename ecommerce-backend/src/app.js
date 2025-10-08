@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const path = require('path');
 const {applySecurity} = require('./middleware/security');
 const {errorHandler} = require('./middleware/error');
 const cookieParser = require('cookie-parser');
@@ -22,6 +23,9 @@ if(process.env.NODE_ENV !== 'test') {
 }
 
 applySecurity(app);
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.get('/api/health',(req, res)=>{
     res.json({success:true, message:'Ok'});
